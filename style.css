@@ -1,0 +1,30 @@
+body{
+    margin : 0;
+    padding : 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+    background-color: lightslategray;
+}
+
+#container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#ticbox{
+    display: grid;
+    grid-template-columns: repeat(3, 220px);
+    grid-template-rows: repeat(3, 220px);
+    gap : 10px;
+}
+
+.box{
+    height : 100%;
+    width : 100%;
+    background-color: peachpuff;
+    border : 2px solid black;
+    border-radius: 8px;
+    cursor: pointer;
+}
