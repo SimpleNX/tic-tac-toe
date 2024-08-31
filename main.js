@@ -33,7 +33,7 @@ function game(){
         return false;
     };
 
-    return { players, gameboard, turn };
+    return { players, gameboard, turn, flipper };
 }
 
 
