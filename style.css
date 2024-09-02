@@ -14,9 +14,9 @@ body{
 
 #ticbox{
     display: grid;
-    grid-template-columns: repeat(3, 220px);
-    grid-template-rows: repeat(3, 220px);
-    gap : 10px;
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: repeat(3, 150px);
+    gap : 5px;
 }
 
 .box{
@@ -63,6 +63,6 @@ button{
     background-color: green;
     color : white;
     border-radius: 6px;
-    padding : 15px 25px;
+    padding : 10px 20px;
     font-size: 20px;
 }
