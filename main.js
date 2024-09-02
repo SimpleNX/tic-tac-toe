@@ -18,20 +18,26 @@ function game(){
     const turnObj = {turn : 0};
     let gameEnd  = false;
     let gameStart = false;
+    let count = 0;
 
     let flipTurn = () =>{
         return (turnObj.turn===0) ? 1 : 0;
     }
 
     let flipper = (i, j)=>{
-        board.gameboard[i][j] = players[turnObj.turn].mark;
-
-        if(!gameEnd)
-            gameEnd = logic(board.gameboard);
-        if(gameEnd)
-            return true;
-        turnObj.turn = flipTurn();
-        return false;
+        if(board.gameboard[i][j]==="S"){
+            board.gameboard[i][j] = players[turnObj.turn].mark;
+            count++;
+            if(!gameEnd)
+                gameEnd = logic(board.gameboard, count);
+            if(count === 9 && !gameEnd)
+                return { val : true, res : "Tie"};
+            if(gameEnd)
+                return { val : true, res : "Win"};
+            turnObj.turn = flipTurn();
+            return { val : false, res : "C"};
+        }
+        return { val : false, res : "Skip"};
     };
 
     return { players, board, turnObj, flipper, gameStart, flipTurn };
@@ -46,8 +52,11 @@ function domObj(gameObj){
     const result = document.querySelector("#result");
 
     let status = (did)=>{
-        if(did){
+        if(did === "Win"){
             result.innerText = `Player ${gameObj.players[gameObj.turnObj.turn].name} won the round`;
+            gameObj.gameStart = false;
+        }else if(did === "Tie"){
+            result.innerText = `Game ended in a draw`;
             gameObj.gameStart = false;
         }
     };
@@ -55,7 +64,7 @@ function domObj(gameObj){
     return { box, start, dialog, reset, submit, result, status };
 }
 
-function logic(gameboard){
+function logic(gameboard, count){
     //3*3 board requires 8 checks in total
     //Divided into 3 types.
     //horizontal checks
@@ -116,8 +125,10 @@ const domobj = domObj(gameObj);
         let co = event.target.id;
         let i = co[0], j = co[2];
         let status = gameObj.flipper(i, j);
-        event.target.innerText = gameObj.board.gameboard[i][j];
-        (domobj.status)(status);
+        if(status.res !== "Skip"){
+            event.target.innerText = gameObj.board.gameboard[i][j];
+            (domobj.status)(status.res);
+        }
     }
 });
 (domobj.start).addEventListener("click", ()=>{
@@ -137,5 +148,5 @@ const domobj = domObj(gameObj);
     gameObj.gameStart = true;
 });
 (domobj.reset).addEventListener("click", ()=>{
-    setTimeout(location.reload(), 10000);
+    location.reload();
 });
