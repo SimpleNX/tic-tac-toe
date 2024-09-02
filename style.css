@@ -26,6 +26,10 @@ body{
     border : 2px solid black;
     border-radius: 8px;
     cursor: pointer;
+    text-align: center;
+    font-size: 7rem;
+    font-weight: bold;
+    color : black;
 }
 
 /* #det{
@@ -35,6 +39,14 @@ body{
     justify-content: space-between;
     gap : 30px;
 } */
+
+#det > div{
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap : 30px;
+}
 
 #det form{
     display:flex;

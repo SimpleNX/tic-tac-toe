@@ -15,27 +15,26 @@ function game(){
     const players = [playerOne, playerTwo];
 
     const board = gameBoard();
-    let turn = 0;
+    const turnObj = {turn : 0};
     let gameEnd  = false;
     let gameStart = false;
 
-    let flipTurn = (turn) =>{
-        return (turn===0) ? 1 : 0
+    let flipTurn = () =>{
+        return (turnObj.turn===0) ? 1 : 0;
     }
 
     let flipper = (i, j)=>{
-        console.log(players[turn].mark)
-        board.gameboard[i][j] = players[turn].mark;
-        turn = flipTurn(turn);
+        board.gameboard[i][j] = players[turnObj.turn].mark;
 
         if(!gameEnd)
             gameEnd = logic(board.gameboard);
         if(gameEnd)
             return true;
+        turnObj.turn = flipTurn();
         return false;
     };
 
-    return { players, board, turn, flipper, gameStart, flipTurn };
+    return { players, board, turnObj, flipper, gameStart, flipTurn };
 }
 
 function domObj(gameObj){
@@ -46,12 +45,10 @@ function domObj(gameObj){
     const submit = document.querySelector("#sub");
     const result = document.querySelector("#result");
 
-    let gameReset = () => setTimeout(location.reload(), 6000);
-
     let status = (did)=>{
         if(did){
-            result.innerText = `Player ${gameObj.players[gameObj.flipTurn(gameObj.turn)]} won the round`;
-            gameReset();
+            result.innerText = `Player ${gameObj.players[gameObj.turnObj.turn].name} won the round`;
+            gameObj.gameStart = false;
         }
     };
 
@@ -117,12 +114,9 @@ const domobj = domObj(gameObj);
 (domobj.box).addEventListener("click", (event)=>{
     if(gameObj.gameStart){
         let co = event.target.id;
-        console.log(event.target.innerText);
         let i = co[0], j = co[2];
-        console.log(i, j)
         let status = gameObj.flipper(i, j);
         event.target.innerText = gameObj.board.gameboard[i][j];
-        console.log(event.target.innerText);
         (domobj.status)(status);
     }
 });
@@ -143,5 +137,5 @@ const domobj = domObj(gameObj);
     gameObj.gameStart = true;
 });
 (domobj.reset).addEventListener("click", ()=>{
-    setTimeout(location.reload(), 5000);
+    setTimeout(location.reload(), 10000);
 });
