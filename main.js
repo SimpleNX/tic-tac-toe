@@ -40,7 +40,19 @@ function game(){
         return { val : false, res : "Skip"};
     };
 
-    return { players, board, turnObj, flipper, gameStart, flipTurn };
+    let reset = ()=>{
+        for(let i = 0; i<3; i++){
+            for(let j = 0; j<3; j++){
+                board.gameboard[i][j] = "S";
+            }
+        }
+        turnObj.turn = 0;
+        gameEnd = false;
+        gameStart = false;
+        count = 0;
+    }
+
+    return { players, board, turnObj, flipper, gameStart, flipTurn, reset };
 }
 
 function domObj(gameObj){
@@ -50,6 +62,8 @@ function domObj(gameObj){
     const reset = document.querySelector("#reset");
     const submit = document.querySelector("#sub");
     const result = document.querySelector("#result");
+    const restart = document.querySelector("#restart");
+    const boxes = Array.from(document.querySelectorAll(".box"));
 
     let status = (did)=>{
         if(did === "Win"){
@@ -58,10 +72,12 @@ function domObj(gameObj){
         }else if(did === "Tie"){
             result.innerText = `Game ended in a draw`;
             gameObj.gameStart = false;
+        }else if(did==="clear"){
+            result.innerText = "";
         }
     };
 
-    return { box, start, dialog, reset, submit, result, status };
+    return { box, start, dialog, reset, submit, status, restart, boxes };
 }
 
 function logic(gameboard, count){
@@ -133,6 +149,7 @@ const domobj = domObj(gameObj);
 });
 (domobj.start).addEventListener("click", ()=>{
     (domobj.dialog).showModal();
+    domobj.start.disabled = true;
 });
 (domobj.submit).addEventListener("click", (event)=>{
     let oneName = document.querySelector("#play1 #name").value;
@@ -149,4 +166,12 @@ const domobj = domObj(gameObj);
 });
 (domobj.reset).addEventListener("click", ()=>{
     location.reload();
+});
+(domobj.restart).addEventListener("click", (event)=>{
+    gameObj.reset();
+    (domobj.boxes).forEach((element)=>{
+        element.innerText = "";
+    });
+    domobj.status("clear");
+    (domobj.submit).dispatchEvent(new Event("click"));
 });
